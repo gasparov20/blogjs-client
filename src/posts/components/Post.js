@@ -57,13 +57,22 @@ const Post = (props) => {
         }
     };
 
+    const convertMongoDate = (date) => {
+        // 2021-12-02T18:28:33.463Z
+        let time = date.substring(11, 16);
+        let year = date.substring(0, 4);
+        let month = date.substring(5, 7);
+        let day = date.substring(8, 10);
+        return `${time} ${month}/${day}/${year}`;
+    };
+
     return (
         <div style={{marginBottom: "2rem"}}>
             <Paper style={{padding: "2rem", paddingBottom: "1rem"}} elevation={2}>
                 <div style={{paddingBottom: "1rem"}}>
                     <div style={{display: "inline-block", fontSize: "1.5rem", fontWeight:"bold"}}>{props.title}</div>
                     <div style={{fontStyle: "italic", display: "inline-block", fontSize: "0.75rem", marginLeft: "3rem"}}>{props.author}</div>
-                    <div style={{display: "inline-block", fontSize: "1.5rem", float:"right"}}>{props.date}</div>
+                    <div style={{display: "inline-block", fontSize: "1.5rem", float:"right"}}>{convertMongoDate(props.date)}</div>
                 </div>
                 <div style={{paddingBottom: "1rem"}}>
                     {props.postBody}
