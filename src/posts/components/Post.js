@@ -5,7 +5,6 @@ import { useState, useEffect, useContext } from 'react';
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
 import { AuthContext } from '../../shared/context/auth-context'
-import { ServerURL } from "../../shared/server-config"
 import CommentsList from './CommentsList';
 
 const Post = (props) => {
@@ -14,7 +13,6 @@ const Post = (props) => {
     const [newComment, setNewComment] = useState("");
     const [showComments, setShowComments] = useState(false);
     const auth = useContext(AuthContext);
-    let commentsLength = 0;
 
     // set state of showing comments
     const commentsClickHandler = () => {

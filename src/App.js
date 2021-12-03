@@ -33,7 +33,6 @@ const App = () => {
     setUsername(userName);
     setUserType(userType);
     setFullname(fullName);
-    console.log("logged in! welcome, " + userName + " (" + userType + ")");
   }, []);
 
   const logout = useCallback(() => {
@@ -41,7 +40,6 @@ const App = () => {
     setUserId(null);
     setUsername(null);
     setUserType(null);
-    console.log("logged out!");
   }, []);
 
   let routes;
@@ -53,7 +51,6 @@ const App = () => {
         <Route path="/" element={<MainPage />} exact />
         <Route path="/create" element={<CreatePost />} exact />
       </Routes>
-      {/* <Navigate to="/" /> */}
       </Fragment>
     );
   } else {
@@ -64,7 +61,6 @@ const App = () => {
         <Route path="/login" element={<Login />} exact />
         <Route path="/register" element={<Register />} exact />
       </Routes>
-      {/* <Navigate to="/login" /> */}
       </Fragment>
     );
   }
