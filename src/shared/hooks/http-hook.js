@@ -21,6 +21,7 @@ export const useHttpClient = () => {
         });
 
         const responseData = await response.json();
+        
         if (!response.ok) {
             console.log(response);
             throw new Error(responseData.message);

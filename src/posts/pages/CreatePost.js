@@ -9,7 +9,6 @@ import Welcome from "../../posts/components/Welcome";
 import "./CreatePost.css";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
-import { ServerURL } from "../../shared/server-config";
 
 const CreatePost = () => {
   const [convertedText, setConvertedText] = useState("");

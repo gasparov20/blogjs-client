@@ -3,7 +3,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
-import { ServerURL } from "../../shared/server-config"
 
 const Comment = (props) => {
     const auth = useContext(AuthContext);

@@ -13,7 +13,7 @@ const MainPage = () => {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
 
-  useEffect(async () => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const responseData = await sendRequest(
