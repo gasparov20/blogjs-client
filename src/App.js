@@ -18,6 +18,7 @@ import Toolbar from "./shared/components/Toolbar";
 import Login from "./user/pages/Login";
 import Register from "./user/pages/Register";
 import CreatePost from "./posts/pages/CreatePost";
+import Footer from "./shared/components/Footer";
 import { AuthContext } from "./shared/context/auth-context";
 
 const App = () => {
@@ -82,6 +83,9 @@ const App = () => {
         <div className="mainBody">
           <Toolbar />
           {routes}
+        </div>
+        <div style={{display:"flex", justifyContent: "center"}}>
+          2021 Andrew Gasparovich
         </div>
       </Router>
     </AuthContext.Provider>
