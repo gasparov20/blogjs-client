@@ -4,18 +4,19 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-
 import Welcome from "../../posts/components/Welcome";
-import "./CreatePost.css";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
+import { AlertContext } from "../../shared/context/alert-context";
+import "./CreatePost.css";
 
-const CreatePost = () => {
+const CreatePost = (props) => {
   const [convertedText, setConvertedText] = useState("");
   const [enteredTitle, setEnteredTitle] = useState("");
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
+  const alert = useContext(AlertContext);
 
   const titleChangedHandler = (event) => {
     setEnteredTitle(event.target.value);
@@ -26,29 +27,31 @@ const CreatePost = () => {
   };
 
   const fakeTitle = "Test Post";
-  const fakeBody = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+  const fakeBody =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
   const postSubmitHandler = async (event) => {
     event.preventDefault();
     try {
-      const nameData = await sendRequest(`${process.env.REACT_APP_SERVER_URL}/users/${auth.userId}`, "GET");
       const responseData = await sendRequest(
-      `${process.env.REACT_APP_SERVER_URL}/posts/create`,
-      "POST",
-      JSON.stringify({
-        title: enteredTitle === "" ? fakeTitle : enteredTitle,
-        postBody: convertedText === "" ? fakeBody : convertedText,
-        creator: nameData.name,
-        creatorID: auth.userId,
-        comments: [],
-        reactions: [],
-      }),
-      {
-        "Content-Type": "application/json",
-      }
-    );
-    } catch (err) {}
-    navigate("/");
+        `${process.env.REACT_APP_SERVER_URL}/posts/create`,
+        "POST",
+        JSON.stringify({
+          title: enteredTitle === "" ? fakeTitle : enteredTitle,
+          postBody: convertedText === "" ? fakeBody : convertedText,
+          creatorID: auth.userId,
+        }),
+        {
+          Authorization: "Bearer " + auth.token,
+          "Content-Type": "application/json",
+        }
+      );
+      console.log("if this runs why doesn't navigate?");
+      alert.setAlert();
+      navigate("/");
+    } catch (err) {
+      console.log("Create post error: " + err);
+    }
   };
 
   return (
@@ -75,7 +78,7 @@ const CreatePost = () => {
             onChange={postChangedHandler}
           />
         </div>
-        <div className="container">
+        <div className="center-div-btn">
           <Button type="submit" variant="contained" size="large">
             Submit Post
           </Button>

@@ -1,17 +1,23 @@
-import { Markup } from 'interweave'
-import Post from './Post'
+import { Markup } from "interweave";
+import Post from "./Post";
 
 const PostsList = (props) => {
-
-    const reversedPosts = props.posts.reverse();
-
-    return(
-        <div style={{marginTop: "3rem"}}>
-        { reversedPosts.map(post => (
-            <Post key={post.id} id={post.id} title={post.title} postBody={<Markup content={post.postBody} />} date={post.createdAt} author={post.creator} />
-        ))}
-        </div>
-    )
-}
+  return (
+    <>
+      {props.posts.map((post) => (
+        <Post
+          key={post._id || post.id}
+          id={post._id || post.id}
+          title={post.title}
+          postBody={<Markup content={post.postBody} />}
+          comments={post.comments}
+          date={post.createdAt}
+          author={`${post.creatorID.firstName} ${post.creatorID.lastName}`}
+          creator={post.creatorID}
+        />
+      ))}
+    </>
+  );
+};
 
 export default PostsList;

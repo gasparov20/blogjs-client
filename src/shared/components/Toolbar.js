@@ -1,93 +1,84 @@
 import AppBar from "@mui/material/AppBar";
 import ToolBar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React, { useContext } from "react";
-
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../shared/context/auth-context";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 
-const loginTheme = createTheme({
-  palette: {
-    primary: {
-      main: "#ffffff",
-    },
-  },
-});
-
-const registerTheme = createTheme({
-  palette: {
-    primary: {
-      main: "#ffffff",
-    },
-  },
-});
-
-const Toolbar = () => {
+const Toolbar = (props) => {
   const auth = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
+  const loginTheme = createTheme({
+    palette: {
+      primary: {
+        main: "#ffffff",
+      },
+    },
+  });
+
+  const registerTheme = createTheme({
+    palette: {
+      primary: {
+        main: "#ffffff",
+      },
+    },
+  });
+
+  const registerClickHandler = () => {
+    navigate("/register");
+  };
+
+  const loginClickHandler = () => {
+    navigate("/login");
+  };
 
   return (
-    <AppBar position="absolute" display="flex">
+    <AppBar>
       <ToolBar>
-        <div style={{ display: "contents", float: "left" }}>
+        <Box display="flex" flexGrow={1}>
           <ThemeProvider theme={loginTheme}>
             <Typography
+              style={{ textDecoration: "none" }}
               color="primary"
               component={Link}
               to={"/"}
-              style={{
-                textDecoration: "none",
-                flex: 1,
-                padding: "1rem",
-                paddingLeft: "0",
-              }}
               variant="h3"
             >
               blog.js
             </Typography>
           </ThemeProvider>
-        </div>
-        <div style={{ display: "flex", float: "right" }}>
-          {!auth.isLoggedIn && (
-            <React.Fragment>
-              <ThemeProvider theme={loginTheme}>
-                <Link to="/login">
-                  <Button style={{ float: "right" }} color="primary">
-                    Login
-                  </Button>
-                </Link>
-              </ThemeProvider>
-              <ThemeProvider theme={registerTheme}>
-                <Link to="/register">
-                  <Button style={{ float: "right" }} color="primary">
-                    Register
-                  </Button>
-                </Link>
-              </ThemeProvider>
-            </React.Fragment>
-          )}
-          {auth.isLoggedIn && (
-            <React.Fragment>
-              <div
-                style={{
-                  display: "inline-block",
-                  paddingRight: "5rem",
-                  justifyContent: "center",
-                }}
-              >
-                Hello, {auth.firstName}
-              </div>
-              <ThemeProvider theme={loginTheme}>
-                <Link to="/logout">
-                  <Button style={{ float: "right" }} color="primary">
-                    Logout
-                  </Button>
-                </Link>
-              </ThemeProvider>
-            </React.Fragment>
-          )}
-        </div>
+        </Box>
+        {!auth.isLoggedIn && (
+          <>
+            <ThemeProvider theme={loginTheme}>
+              <Button color="primary" onClick={loginClickHandler}>
+                Login
+              </Button>
+            </ThemeProvider>
+            <ThemeProvider theme={registerTheme}>
+              <Button color="primary" onClick={registerClickHandler}>
+                Register
+              </Button>
+            </ThemeProvider>
+          </>
+        )}
+        {auth.isLoggedIn && (
+          <>
+            <p style={{ marginRight: "30px" }}>Hello, {auth.userFirstName}</p>
+            <ThemeProvider theme={loginTheme}>
+              <Button color="primary" onClick={auth.logout}>
+                Logout
+              </Button>
+            </ThemeProvider>
+          </>
+        )}
       </ToolBar>
     </AppBar>
   );

@@ -1,0 +1,44 @@
+.post-header {
+    display: flex;
+    line-height: 65px;
+    height: 65px;
+}
+
+.post-header p {
+    display: inline-block;
+    line-height: normal;
+    vertical-align: middle;
+    align-self: center;
+}
+
+.p {
+    display: inline-block;
+    line-height: normal;
+    vertical-align: middle;
+    align-self: center;
+}
+
+.center-div {
+    width: 85%;
+    display: inherit;
+    margin: auto;
+}
+
+.title {
+    padding-bottom: 20px;
+}
+
+.user {
+    padding-left: 10px;
+    padding-right: 15px;
+    display: flex;
+}
+
+.user:hover {
+    color: white;
+    background-color: #1976d2;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 15px;
+    display: flex;
+}

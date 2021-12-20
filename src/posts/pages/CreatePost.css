@@ -7,3 +7,9 @@
     padding-top: 5rem;
     padding-bottom: 5rem;
  }
+
+ .center-div-btn {
+    display: flex;
+    justify-content: center;
+    margin: 30px;
+}

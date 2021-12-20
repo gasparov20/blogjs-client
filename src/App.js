@@ -2,93 +2,209 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-
 import "./App.css";
 import React, { Fragment, useState, useEffect, useCallback } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-  Navigate,
-} from "react-router-dom";
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainPage from "./posts/pages/MainPage";
+import PendingPosts from "./posts/pages/PendingPosts";
 import Toolbar from "./shared/components/Toolbar";
 import Login from "./user/pages/Login";
 import Register from "./user/pages/Register";
+import UserProfile from "./user/pages/UserProfile";
+import AccessDenied from "./user/pages/AccessDenied";
 import CreatePost from "./posts/pages/CreatePost";
-import Footer from "./shared/components/Footer";
 import { AuthContext } from "./shared/context/auth-context";
+import { AlertContext } from "./shared/context/alert-context";
+import { useHttpClient } from "./shared/hooks/http-hook";
+import { useAlert } from "react-alert";
+
+let logoutTimer;
 
 const App = () => {
+  const { sendRequest } = useHttpClient();
   const [token, setToken] = useState(false);
-  const [userId, setUserId] = useState(false);
-  const [userName, setUsername] = useState("");
-  const [userType, setUserType] = useState("");
-  const [fullName, setFullname] = useState("");
+  const [userId, setUserId] = useState();
+  const [userType, setUserType] = useState();
+  const [userFirstName, setUserFirstName] = useState();
+  const [tokenExpirationDate, setTokenExpirationDate] = useState();
+  const [successAlert, setSuccessAlert] = useState(false);
+  const [userVerified, setUserVerified] = useState(false);
 
-  const login = useCallback((userId, token, userName, userType, fullName) => {
-    setToken(token);
-    setUserId(userId);
-    setUsername(userName);
-    setUserType(userType);
-    setFullname(fullName);
-  }, []);
+  const login = useCallback(
+    (userId, token, userFirstName, userType, expirationDate) => {
+      setUserVerified(token === "unverified" ? false : true);
+      setToken(token);
+      setUserId(userId);
+      setUserFirstName(userFirstName);
+      setUserType(userType);
+
+      const tokenExpirationDate =
+        expirationDate || new Date(new Date().getTime() + 3600000);
+
+      setTokenExpirationDate(tokenExpirationDate);
+
+      localStorage.setItem(
+        "userData",
+        JSON.stringify({
+          userId: userId,
+          token: token,
+          expiration: tokenExpirationDate.toISOString(),
+        })
+      );
+    },
+    []
+  );
 
   const logout = useCallback(() => {
     setToken(null);
     setUserId(null);
-    setUsername(null);
+    setTokenExpirationDate(null);
+    setUserFirstName(null);
     setUserType(null);
+    setUserVerified(false);
+    localStorage.removeItem("userData");
+  }, []);
+
+  // calculate time remaining on existing token
+  useEffect(() => {
+    if (token && tokenExpirationDate) {
+      const currentDate = new Date();
+      const remainingTokenTime =
+        tokenExpirationDate.getTime() - currentDate.getTime();
+      logoutTimer = setTimeout(logout, remainingTokenTime);
+    } else {
+      clearTimeout(logoutTimer);
+    }
+  }, [token, logout, tokenExpirationDate]);
+
+  const getFirstName = useCallback(
+    async (userId) => {
+      let responseData;
+      try {
+        responseData = await sendRequest(
+          `${process.env.REACT_APP_SERVER_URL}/users/${userId}`,
+          "GET"
+        );
+      } catch (err) {}
+      setUserFirstName(responseData.firstName);
+      setUserType(responseData.userType);
+    },
+    [sendRequest]
+  );
+
+  // auto-login
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("userData"));
+    if (storedData) {
+      getFirstName(storedData.userId);
+    }
+    if (
+      storedData &&
+      storedData.token &&
+      new Date(storedData.expiration) > new Date()
+    ) {
+      login(
+        storedData.userId,
+        storedData.token,
+        userFirstName,
+        userType,
+        new Date(storedData.expiration)
+      );
+    }
+  }, [login, getFirstName, userFirstName, userType]);
+
+  const postSubmitted = useCallback(() => {
+    setSuccessAlert(true);
+    setTimeout(() => {
+      setSuccessAlert(false);
+    }, 5000);
   }, []);
 
   let routes;
-
-  if (token) {
+  if (token !== "unverified" && userType === "admin") {
     routes = (
       <Fragment>
-      <Routes>
-        <Route path="/" element={<MainPage />} exact />
-        <Route path="/create" element={<CreatePost />} exact />
-      </Routes>
+        <Routes>
+          <Route exact path="/users/:id" element={<UserProfile />} />
+          <Route
+            path="/"
+            element={<MainPage successAlert={successAlert} />}
+            exact
+          />
+          <Route path="/create" element={<CreatePost />} exact />
+          <Route
+            path="/login"
+            element={<MainPage successAlert={successAlert} />}
+            exact
+          />
+          <Route path="/publish" element={<PendingPosts />} exact />
+        </Routes>
+      </Fragment>
+    );
+  } else if (token !== "unverified" && userVerified) {
+    routes = (
+      <Fragment>
+        <Routes>
+          <Route path="/users/:id" element={<UserProfile />} />
+          <Route
+            path="/"
+            element={<MainPage successAlert={successAlert} />}
+            exact
+          />
+          <Route path="/create" element={<CreatePost />} exact />
+          <Route
+            path="/login"
+            element={<MainPage successAlert={successAlert} />}
+            exact
+          />
+          <Route path="/publish" element={<AccessDenied />} exact />
+        </Routes>
       </Fragment>
     );
   } else {
     routes = (
       <Fragment>
-      <Routes>
-        <Route path="/" element={<MainPage />} exact />
-        <Route path="/login" element={<Login />} exact />
-        <Route path="/register" element={<Register />} exact />
-      </Routes>
+        <Routes>
+          <Route
+            exact
+            path="/users/:id"
+            element={
+              token === "unverified" ? <UserProfile /> : <AccessDenied />
+            }
+          />
+          <Route path="/" element={<MainPage />} exact />
+          <Route path="/create" element={<AccessDenied />} exact />
+          <Route path="/login" element={<Login />} exact />
+          <Route path="/register" element={<Register />} exact />
+          <Route path="/publish" element={<AccessDenied />} exact />
+        </Routes>
       </Fragment>
     );
   }
 
   return (
-    <AuthContext.Provider
+    <AlertContext.Provider
       value={{
-        userId: userId,
-        fullName: fullName,
-        firstName: userName,
-        userType: userType,
-        isLoggedIn: !!token,
-        token: token,
-        login: login,
-        logout: logout,
+        setAlert: postSubmitted,
       }}
     >
-      <Router>
-        <div className="mainBody">
+      <AuthContext.Provider
+        value={{
+          userId: userId,
+          userFirstName: userFirstName,
+          userType: userType,
+          isLoggedIn: !!token,
+          token: token,
+          login: login,
+          logout: logout,
+        }}
+      >
+        <Router>
           <Toolbar />
-          {routes}
-        </div>
-        <div style={{display:"flex", justifyContent: "center"}}>
-          2021 Andrew Gasparovich
-        </div>
-      </Router>
-    </AuthContext.Provider>
+          <div className="main">{routes}</div>
+        </Router>
+      </AuthContext.Provider>
+    </AlertContext.Provider>
   );
 };
 

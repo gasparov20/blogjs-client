@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,32 +12,17 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AuthContext } from "../../shared/context/auth-context";
-import { useHttpClient } from '../../shared/hooks/http-hook';
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      Andrew Gasparovich
-      {" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { useHttpClient } from "../../shared/hooks/http-hook";
 
 const theme = createTheme();
 
 const Login = () => {
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
+  const [loginFailed, setLoginFailed] = useState(false);
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const navigate = useNavigate();
@@ -52,22 +37,35 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoginFailed(false);
+    let shouldLogin = true;
+    let responseData;
     try {
-      const responseData = await sendRequest(
-      `${process.env.REACT_APP_SERVER_URL}/users/login`,
-      "POST",
-      JSON.stringify({
-        email: enteredEmail,
-        password: enteredPassword,
-      }),
-      {
-        "Content-Type": "application/json",
-      }
-    );
-
-    auth.login(responseData.userId, responseData.token, responseData.userName, responseData.userType, responseData.fullName);
-    navigate("/");
-    } catch (err) {}
+      responseData = await sendRequest(
+        `${process.env.REACT_APP_SERVER_URL}/users/login`,
+        "POST",
+        JSON.stringify({
+          email: enteredEmail,
+          password: enteredPassword,
+        }),
+        {
+          "Content-Type": "application/json",
+        }
+      );
+    } catch (err) {
+      shouldLogin = false;
+      setLoginFailed(true);
+    }
+    if (shouldLogin) {
+      auth.login(
+        responseData.userId,
+        responseData.token,
+        responseData.userName,
+        responseData.userType,
+        null
+      );
+      navigate("/");
+    }
   };
 
   return (
@@ -120,6 +118,13 @@ const Login = () => {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
+            {loginFailed && (
+              <Grid item xs={12}>
+                <Alert severity="error">
+                  Could not find a user with those credentials.
+                </Alert>
+              </Grid>
+            )}
             <Button
               type="submit"
               fullWidth
@@ -142,7 +147,6 @@ const Login = () => {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );

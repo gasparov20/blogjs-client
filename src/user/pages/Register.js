@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,27 +13,10 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 const theme = createTheme();
 
@@ -45,6 +28,7 @@ const Register = () => {
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const navigate = useNavigate();
+  const [emailInUse, setEmailInUse] = useState(false);
 
   const fNameHandler = (event) => {
     setEnteredFName(event.target.value);
@@ -62,39 +46,50 @@ const Register = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(data.values);
-
     try {
       const responseData2 = await sendRequest(
-      "http://localhost:5000/api/users/register",
-      "POST",
-      JSON.stringify({
-        firstName: enteredFName,
-        lastName: enteredLName,
-        email: enteredEmail,
-        password: enteredPassword,
-        userType: "user"
-      }),
-      {
-        "Content-Type": "application/json",
+        `${process.env.REACT_APP_SERVER_URL}/users/register`,
+        "POST",
+        JSON.stringify({
+          firstName: enteredFName,
+          lastName: enteredLName,
+          email: enteredEmail,
+          password: enteredPassword,
+        }),
+        {
+          "Content-Type": "application/json",
+        }
+      );
+      console.log(responseData2);
+      if (responseData2.message) {
+        if (responseData2.message === "email address already in use") {
+          setEmailInUse(true);
+          return;
+        }
       }
-    );
 
-    const responseData = await sendRequest(
-      `${process.env.REACT_APP_SERVER_URL}/users/login`,
-      "POST",
-      JSON.stringify({
-        email: enteredEmail,
-        password: enteredPassword,
-      }),
-      {
-        "Content-Type": "application/json",
-      }
-    );
-    auth.login(responseData.userId, responseData.token, responseData.userName, responseData.userType);
+      const responseData = await sendRequest(
+        `${process.env.REACT_APP_SERVER_URL}/users/login`,
+        "POST",
+        JSON.stringify({
+          email: enteredEmail,
+          password: enteredPassword,
+        }),
+        {
+          "Content-Type": "application/json",
+        }
+      );
+      auth.login(
+        responseData.userId,
+        responseData.token,
+        responseData.userName,
+        responseData.userType
+      );
     } catch (err) {}
     navigate("/");
   };
+
+  const login = async () => {};
 
   return (
     <ThemeProvider theme={theme}>
@@ -171,14 +166,11 @@ const Register = () => {
                   onChange={passwordHandler}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
+              {emailInUse && (
+                <Grid item xs={12}>
+                  <Alert severity="error">Email address already in use.</Alert>
+                </Grid>
+              )}
             </Grid>
             <Button
               type="submit"
@@ -190,14 +182,13 @@ const Register = () => {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/login" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );

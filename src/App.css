@@ -1,10 +1,17 @@
-.mainBody {
-  margin-left: 20%;
-  margin-right: 20%;
-  margin-top: 8rem;
-  margin-bottom: 6rem;
+@import './shared/style.css';
+
+.modalBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 body {
-  background-color: rgb(241, 241, 241);
+  background-color: #F4F4F4;
 }
