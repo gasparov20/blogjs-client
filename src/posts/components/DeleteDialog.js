@@ -31,15 +31,6 @@ export default function DeleteDialog(props) {
       <IconButton aria-label="delete" onClick={handleClickOpen}>
         <DeleteIcon />
       </IconButton>
-      {/* <DeleteIcon
-        onMouseEnter={() => {
-          document.getElementById("root").style.cursor = "pointer";
-        }}
-        onMouseLeave={() => {
-          document.getElementById("root").style.cursor = null;
-        }}
-        onClick={handleClickOpen}
-      /> */}
       <Dialog
         open={open}
         onClose={handleClose}

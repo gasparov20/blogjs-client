@@ -2,6 +2,7 @@ import { useContext, useCallback, useState } from "react";
 import DeleteDialog from "./DeleteDialog";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
+
 import "./Comment.css";
 
 const Comment = (props) => {
@@ -12,7 +13,7 @@ const Comment = (props) => {
   // sends request to server to delete a comment
   const deleteHandler = useCallback(async () => {
     const responseData = await sendRequest(
-      `${process.env.REACT_APP_SERVER_URL}/posts/${props.postID}/comments/${props.id}`,
+      `/api/posts/${props.postID}/comments/${props.id}`,
       "DELETE",
       null,
       {

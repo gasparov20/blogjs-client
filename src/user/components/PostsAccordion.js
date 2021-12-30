@@ -26,12 +26,12 @@ export default function PostsAccordion(props) {
     let day = date.substring(8, 10);
     return `${time} ${month}/${day}/${year}`;
   };
-  console.log(props);
+
   // sends request to server to delete a post
   const deleteHandler = useCallback(
     async (event) => {
       const responseData = await sendRequest(
-        `${process.env.REACT_APP_SERVER_URL}/posts/${props.post.id}`,
+        `/api/posts/${props.post.id}`,
         "DELETE",
         JSON.stringify({
           creatorID: auth.userId,

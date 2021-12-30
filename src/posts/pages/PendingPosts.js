@@ -29,7 +29,7 @@ const PendingPosts = (props) => {
     const fetchData = async () => {
       try {
         responseData = await sendRequest(
-          `${process.env.REACT_APP_SERVER_URL}/posts/pending/all`,
+          `/api/posts/pending/all`,
           "GET",
           null,
           { Authorization: "Bearer " + auth.token }
@@ -61,7 +61,7 @@ const PendingPosts = (props) => {
       setBusy(true);
       // add post to published posts
       responseData = await sendRequest(
-        `${process.env.REACT_APP_SERVER_URL}/posts/publish/${currentPost.id}`,
+        `/api/posts/publish/${currentPost.id}`,
         "PUT",
         null,
         {
@@ -82,7 +82,7 @@ const PendingPosts = (props) => {
     try {
       setBusy(true);
       responseData = await sendRequest(
-        `${process.env.REACT_APP_SERVER_URL}/posts/${currentPost.id}`,
+        `/api/posts/${currentPost.id}`,
         "DELETE",
         {
           creatorID: currentPost.creatorID._id,

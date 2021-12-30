@@ -83,10 +83,7 @@ const App = () => {
     async (userId) => {
       let responseData;
       try {
-        responseData = await sendRequest(
-          `${process.env.REACT_APP_SERVER_URL}/users/${userId}`,
-          "GET"
-        );
+        responseData = await sendRequest(`/api/users/${userId}`, "GET");
       } catch (err) {}
       setUserFirstName(responseData.firstName);
       setUserType(responseData.userType);

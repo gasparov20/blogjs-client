@@ -30,14 +30,9 @@ const UserProfile = () => {
     setBusy(true);
     let responseData;
     try {
-      responseData = await sendRequest(
-        `${process.env.REACT_APP_SERVER_URL}/users/id/${id}`,
-        "GET",
-        null,
-        {
-          Authorization: "Bearer " + auth.token,
-        }
-      );
+      responseData = await sendRequest(`/api/users/id/${id}`, "GET", null, {
+        Authorization: "Bearer " + auth.token,
+      });
     } catch (err) {}
     setUser(responseData);
     setBusy(false);

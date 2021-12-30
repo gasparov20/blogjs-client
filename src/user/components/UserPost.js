@@ -6,6 +6,7 @@ import { AuthContext } from "../../shared/context/auth-context";
 import CommentsList from "../../posts/components/CommentsList";
 import DeleteDialog from "../../posts/components/DeleteDialog";
 import { Markup } from "interweave";
+
 import "../../posts/components/Post.css";
 
 const UserPost = (props) => {
@@ -33,7 +34,7 @@ const UserPost = (props) => {
   const keyDownHandler = async (event) => {
     if (event.keyCode === 13) {
       const responseData = await sendRequest(
-        `${process.env.REACT_APP_SERVER_URL}/posts/${props.id}/comments/add`,
+        `/api/posts/${props.id}/comments/add`,
         "POST",
         JSON.stringify({
           comment: newComment,

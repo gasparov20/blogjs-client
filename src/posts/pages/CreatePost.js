@@ -1,7 +1,6 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router";
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Welcome from "../../posts/components/Welcome";
@@ -34,7 +33,7 @@ const CreatePost = (props) => {
     event.preventDefault();
     try {
       const responseData = await sendRequest(
-        `${process.env.REACT_APP_SERVER_URL}/posts/create`,
+        `/api/posts/create`,
         "POST",
         JSON.stringify({
           title: enteredTitle === "" ? fakeTitle : enteredTitle,

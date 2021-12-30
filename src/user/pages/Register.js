@@ -48,7 +48,7 @@ const Register = () => {
     const data = new FormData(event.currentTarget);
     try {
       const responseData2 = await sendRequest(
-        `${process.env.REACT_APP_SERVER_URL}/users/register`,
+        `/api/users/register`,
         "POST",
         JSON.stringify({
           firstName: enteredFName,
@@ -69,7 +69,7 @@ const Register = () => {
       }
 
       const responseData = await sendRequest(
-        `${process.env.REACT_APP_SERVER_URL}/users/login`,
+        `/api/users/login`,
         "POST",
         JSON.stringify({
           email: enteredEmail,

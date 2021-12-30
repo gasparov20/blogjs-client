@@ -42,7 +42,7 @@ const Login = () => {
     let responseData;
     try {
       responseData = await sendRequest(
-        `${process.env.REACT_APP_SERVER_URL}/users/login`,
+        `/api/users/login`,
         "POST",
         JSON.stringify({
           email: enteredEmail,

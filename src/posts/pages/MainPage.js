@@ -6,6 +6,7 @@ import Welcome from "../components/Welcome";
 import PostsList from "../components/PostsList";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
+
 import "../../shared/style.css";
 
 const MainPage = (props) => {
@@ -21,10 +22,7 @@ const MainPage = (props) => {
     setBusy(true);
     let responseData;
     try {
-      responseData = await sendRequest(
-        `${process.env.REACT_APP_SERVER_URL}/posts/all`,
-        "GET"
-      );
+      responseData = await sendRequest(`/api/posts/all`, "GET");
     } catch (err) {}
     const reversedPosts = responseData.reverse();
     setPosts(reversedPosts);

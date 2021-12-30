@@ -57,7 +57,7 @@ const EditProfile = (props) => {
     let responseData;
     try {
       responseData = await sendRequest(
-        `${process.env.REACT_APP_SERVER_URL}/users/id/${auth.userId}`,
+        `/api/users/id/${auth.userId}`,
         "GET",
         null,
         {
@@ -74,7 +74,7 @@ const EditProfile = (props) => {
     }
     setUser(responseData);
     setBusy(false);
-  }, [auth.token, id, sendRequest]);
+  }, [auth.token, auth.userId, id, sendRequest]);
 
   // Retrieve user when mounted
   useEffect(() => {
@@ -132,7 +132,7 @@ const EditProfile = (props) => {
       formData.append("image", formState.inputs.image.value);
       formData.append("removeImage", removeImage);
       responseData = await sendRequest(
-        `${process.env.REACT_APP_SERVER_URL}/users/${auth.userId}`,
+        `/api/users/${auth.userId}`,
         "PUT",
         formData,
         {
