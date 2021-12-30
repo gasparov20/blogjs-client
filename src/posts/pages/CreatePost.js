@@ -1,13 +1,13 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router";
-import ReactQuill from "react-quill";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Welcome from "../../posts/components/Welcome";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 import { AlertContext } from "../../shared/context/alert-context";
-import "./CreatePost.css";
+import React from "react";
+import ReactDOM from "react-dom";
 
 const CreatePost = (props) => {
   const [convertedText, setConvertedText] = useState("");
@@ -33,7 +33,7 @@ const CreatePost = (props) => {
     event.preventDefault();
     try {
       const responseData = await sendRequest(
-        `/api/posts/create`,
+        `${process.env.REACT_APP_SERVER_URL}/posts/create`,
         "POST",
         JSON.stringify({
           title: enteredTitle === "" ? fakeTitle : enteredTitle,
@@ -69,14 +69,17 @@ const CreatePost = (props) => {
           />
         </div>
         <div style={{ backgroundColor: "white" }}>
-          <ReactQuill
+          {/* <ReactQuill
             theme="snow"
             placeholder={"Start creating your masterpiece..."}
             value={convertedText}
             onChange={postChangedHandler}
-          />
+          /> */}
+          <p>ReactQuill should be here. RIP.</p>
         </div>
-        <div className="center-div-btn">
+        <div
+          style={{ display: "flex", justifyContent: "center", margin: "30px" }}
+        >
           <Button type="submit" variant="contained" size="large">
             Submit Post
           </Button>

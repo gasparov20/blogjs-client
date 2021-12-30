@@ -1,5 +1,7 @@
 import Paper from "@mui/material/Paper";
 import "./Welcome.css";
+import React from "react";
+import ReactDOM from "react-dom";
 
 const Welcome = (props) => {
   return (

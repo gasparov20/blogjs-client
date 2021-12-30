@@ -6,6 +6,8 @@ import {
   Paper,
   Button,
 } from "@mui/material";
+import React from "react";
+import ReactDOM from "react-dom";
 import { useState, useEffect, useContext } from "react";
 import PostLite from "../components/PostLite";
 import Welcome from "../components/Welcome";
@@ -29,7 +31,7 @@ const PendingPosts = (props) => {
     const fetchData = async () => {
       try {
         responseData = await sendRequest(
-          `/api/posts/pending/all`,
+          `${process.env.REACT_APP_SERVER_URL}/posts/pending/all`,
           "GET",
           null,
           { Authorization: "Bearer " + auth.token }
@@ -61,7 +63,7 @@ const PendingPosts = (props) => {
       setBusy(true);
       // add post to published posts
       responseData = await sendRequest(
-        `/api/posts/publish/${currentPost.id}`,
+        `${process.env.REACT_APP_SERVER_URL}/posts/publish/${currentPost.id}`,
         "PUT",
         null,
         {
@@ -82,7 +84,7 @@ const PendingPosts = (props) => {
     try {
       setBusy(true);
       responseData = await sendRequest(
-        `/api/posts/${currentPost.id}`,
+        `${process.env.REACT_APP_SERVER_URL}/posts/${currentPost.id}`,
         "DELETE",
         {
           creatorID: currentPost.creatorID._id,

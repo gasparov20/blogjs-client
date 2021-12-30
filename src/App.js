@@ -18,7 +18,7 @@ import { AuthContext } from "./shared/context/auth-context";
 import { AlertContext } from "./shared/context/alert-context";
 import { useHttpClient } from "./shared/hooks/http-hook";
 import { useAlert } from "react-alert";
-
+import ReactDOM from "react-dom";
 let logoutTimer;
 
 const App = () => {
@@ -83,7 +83,10 @@ const App = () => {
     async (userId) => {
       let responseData;
       try {
-        responseData = await sendRequest(`/api/users/${userId}`, "GET");
+        responseData = await sendRequest(
+          `${process.env.REACT_APP_SERVER_URL}/users/${userId}`,
+          "GET"
+        );
       } catch (err) {}
       setUserFirstName(responseData.firstName);
       setUserType(responseData.userType);

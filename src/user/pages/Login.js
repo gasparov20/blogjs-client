@@ -16,6 +16,8 @@ import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import React from "react";
+import ReactDOM from "react-dom";
 
 const theme = createTheme();
 
@@ -42,7 +44,7 @@ const Login = () => {
     let responseData;
     try {
       responseData = await sendRequest(
-        `/api/users/login`,
+        `${process.env.REACT_APP_SERVER_URL}/users/login`,
         "POST",
         JSON.stringify({
           email: enteredEmail,

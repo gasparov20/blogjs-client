@@ -9,6 +9,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import UserPost from "./UserPost";
 import DeleteDialog from "../../posts/components/DeleteDialog";
 import { AuthContext } from "../../shared/context/auth-context";
+import React from "react";
+import ReactDOM from "react-dom";
 
 export default function PostsAccordion(props) {
   const [expanded, setExpanded] = useState(false);
@@ -31,7 +33,7 @@ export default function PostsAccordion(props) {
   const deleteHandler = useCallback(
     async (event) => {
       const responseData = await sendRequest(
-        `/api/posts/${props.post.id}`,
+        `${process.env.REACT_APP_SERVER_URL}/posts/${props.post.id}`,
         "DELETE",
         JSON.stringify({
           creatorID: auth.userId,
@@ -55,18 +57,18 @@ export default function PostsAccordion(props) {
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1bh-content"
         id="panel1bh-header"
+        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       >
         <Typography
           sx={{
             fontWeight: "600",
-            paddingLeft: "10px",
-            paddingRight: "50px",
+            alignSelf: "center",
           }}
         >
           {props.post.title}
         </Typography>
         <div style={{ flexGrow: 1 }}></div>
-        <Typography sx={{ color: "text.secondary" }}>
+        <Typography sx={{ color: "text.secondary", alignSelf: "center" }}>
           {convertMongoDate(props.post.createdAt)}
         </Typography>
         {((auth.userType && auth.userType === "admin") ||

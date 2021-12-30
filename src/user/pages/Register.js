@@ -17,6 +17,7 @@ import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import ReactDOM from "react-dom";
 
 const theme = createTheme();
 
@@ -48,7 +49,7 @@ const Register = () => {
     const data = new FormData(event.currentTarget);
     try {
       const responseData2 = await sendRequest(
-        `/api/users/register`,
+        `${process.env.REACT_APP_SERVER_URL}/users/register`,
         "POST",
         JSON.stringify({
           firstName: enteredFName,
@@ -69,7 +70,7 @@ const Register = () => {
       }
 
       const responseData = await sendRequest(
-        `/api/users/login`,
+        `${process.env.REACT_APP_SERVER_URL}/users/login`,
         "POST",
         JSON.stringify({
           email: enteredEmail,

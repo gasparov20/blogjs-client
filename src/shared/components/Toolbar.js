@@ -13,6 +13,7 @@ import {
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import ReactDOM from "react-dom";
 
 const ToolBar = (props) => {
   const auth = useContext(AuthContext);

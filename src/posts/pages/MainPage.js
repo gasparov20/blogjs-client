@@ -6,7 +6,7 @@ import Welcome from "../components/Welcome";
 import PostsList from "../components/PostsList";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
-
+import ReactDOM from "react-dom";
 import "../../shared/style.css";
 
 const MainPage = (props) => {
@@ -22,7 +22,10 @@ const MainPage = (props) => {
     setBusy(true);
     let responseData;
     try {
-      responseData = await sendRequest(`/api/posts/all`, "GET");
+      responseData = await sendRequest(
+        `${process.env.REACT_APP_SERVER_URL}/posts/all`,
+        "GET"
+      );
     } catch (err) {}
     const reversedPosts = responseData.reverse();
     setPosts(reversedPosts);
@@ -95,6 +98,36 @@ const MainPage = (props) => {
         <PostsList callback={fetchData} posts={posts} />
       )}
       <div className="footer">Copyright &copy; 2022 Andrew Gasparovich</div>
+      {busy ? (
+        <></>
+      ) : (
+        auth.userType === "admin" && (
+          <div
+            style={{
+              position: "relative",
+              left: "0",
+              bottom: "0",
+              width: "100%",
+              color: "gray",
+              textAlign: "center",
+              marginBottom: "50px",
+            }}
+          >
+            Mode: {process.env.NODE_ENV}
+          </div>
+        )
+      )}
+      {busy ? (
+        <></>
+      ) : (
+        auth.userType !== "admin" && (
+          <div
+            style={{
+              marginBottom: "50px",
+            }}
+          ></div>
+        )
+      )}
     </>
   );
 };

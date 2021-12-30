@@ -5,6 +5,7 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 import Welcome from "../../posts/components/Welcome";
 import PostsAccordion from "../components/PostsAccordion";
+import ReactDOM from "react-dom";
 
 const UserPostsList = (props) => {
   const { sendRequest } = useHttpClient();
@@ -30,9 +31,14 @@ const UserProfile = () => {
     setBusy(true);
     let responseData;
     try {
-      responseData = await sendRequest(`/api/users/id/${id}`, "GET", null, {
-        Authorization: "Bearer " + auth.token,
-      });
+      responseData = await sendRequest(
+        `${process.env.REACT_APP_SERVER_URL}/users/id/${id}`,
+        "GET",
+        null,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
+      );
     } catch (err) {}
     setUser(responseData);
     setBusy(false);
@@ -72,11 +78,11 @@ const UserProfile = () => {
                 <p style={{ fontWeight: "600" }}>
                   {user.firstName} {user.lastName}
                 </p>
-                <p>Location: </p>
+                <p>Location: {user.location}</p>
                 <p>Joined: {convertMongoDate(user.joined)}</p>
               </div>
               <div style={{ margin: "30px" }}>
-                <p>User bio</p>
+                <p>{user.bio}</p>
               </div>
             </div>
           </Paper>

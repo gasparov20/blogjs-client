@@ -5,7 +5,8 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 import CommentsList from "./CommentsList";
 import DeleteDialog from "./DeleteDialog";
-
+import React from "react";
+import ReactDOM from "react-dom";
 import "./Post.css";
 
 const Post = (props) => {
@@ -32,7 +33,7 @@ const Post = (props) => {
   // sends request to server to delete a post
   const deleteHandler = useCallback(async () => {
     const responseData = await sendRequest(
-      `/api/posts/${props.id}`,
+      `${process.env.REACT_APP_SERVER_URL}/posts/${props.id}`,
       "DELETE",
       JSON.stringify({
         creatorID: props.creator._id,
@@ -49,7 +50,7 @@ const Post = (props) => {
   const keyDownHandler = async (event) => {
     if (event.keyCode === 13) {
       const responseData = await sendRequest(
-        `/api/posts/${props.id}/comments/add`,
+        `${process.env.REACT_APP_SERVER_URL}/posts/${props.id}/comments/add`,
         "POST",
         JSON.stringify({
           comment: newComment,

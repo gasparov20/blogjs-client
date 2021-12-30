@@ -1,4 +1,6 @@
 import Comment from "./Comment";
+import React from "react";
+import ReactDOM from "react-dom";
 
 const CommentsList = (props) => {
   return (

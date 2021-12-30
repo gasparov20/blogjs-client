@@ -1,5 +1,7 @@
 import Paper from "@mui/material/Paper";
 import "./Post.css";
+import React from "react";
+import ReactDOM from "react-dom";
 
 const PostLite = (props) => {
   const convertMongoDate = (date) => {

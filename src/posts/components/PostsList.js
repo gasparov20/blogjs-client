@@ -1,5 +1,7 @@
 import { Markup } from "interweave";
 import Post from "./Post";
+import React from "react";
+import ReactDOM from "react-dom";
 
 const PostsList = (props) => {
   return (
