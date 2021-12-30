@@ -46,7 +46,6 @@ const CreatePost = (props) => {
           "Content-Type": "application/json",
         }
       );
-      console.log("if this runs why doesn't navigate?");
       alert.setAlert();
       navigate("/");
     } catch (err) {

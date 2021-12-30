@@ -1,30 +1,37 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+import IconButton from "@mui/material/IconButton";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function DeleteCommentDialog(props) {
+export default function DeleteDialog(props) {
   const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (event) => {
+    event.stopPropagation();
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (event) => {
+    event.stopPropagation();
     setOpen(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete = (event) => {
+    event.stopPropagation();
     setOpen(false);
     props.callback();
   };
 
   return (
-    <div style={{ alignSelf: "center" }}>
-      <DeleteIcon
+    <>
+      <IconButton aria-label="delete" onClick={handleClickOpen}>
+        <DeleteIcon />
+      </IconButton>
+      {/* <DeleteIcon
         onMouseEnter={() => {
           document.getElementById("root").style.cursor = "pointer";
         }}
@@ -32,7 +39,7 @@ export default function DeleteCommentDialog(props) {
           document.getElementById("root").style.cursor = null;
         }}
         onClick={handleClickOpen}
-      />
+      /> */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -41,7 +48,7 @@ export default function DeleteCommentDialog(props) {
       >
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete your comment?
+            Are you sure you want to delete this {props.type}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -51,6 +58,6 @@ export default function DeleteCommentDialog(props) {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }

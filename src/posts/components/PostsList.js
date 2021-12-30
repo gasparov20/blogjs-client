@@ -14,6 +14,7 @@ const PostsList = (props) => {
           date={post.createdAt}
           author={`${post.creatorID.firstName} ${post.creatorID.lastName}`}
           creator={post.creatorID}
+          callback={props.callback}
         />
       ))}
     </>

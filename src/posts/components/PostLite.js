@@ -28,6 +28,7 @@ const PostLite = (props) => {
           <p style={{ fontSize: "14px", fontStyle: "italic" }}>
             {props.author}
           </p>
+          <div style={{ flexGrow: 1 }}></div>
           <p style={{ fontSize: "18px", float: "right", marginRight: "20px" }}>
             {convertMongoDate(props.date)}
           </p>

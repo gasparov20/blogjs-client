@@ -40,17 +40,32 @@ const MainPage = (props) => {
 
   return (
     <>
-      {/* {props.successAlert && ( */}
       <Collapse in={props.successAlert}>
         <Alert variant="filled" severity="success">
           Your post has been submitted! All posts must go through our moderation
           team before being published.
         </Alert>
       </Collapse>
-      {/* )} */}
-      <Collapse in={!props.successAlert}>
-        {auth.isLoggedIn && auth.token != "unverified" && (
-          <div className="center">
+      <Collapse in={props.savedAlert}>
+        <Alert variant="filled" severity="success">
+          Your profile has been saved!
+        </Alert>
+      </Collapse>
+      {auth.token === "unverified" && (
+        <Alert severity="info" variant="filled">
+          Welcome to The Blog! Please ask Andrew to verify your account to start
+          posting and commenting (email verification under construction).
+        </Alert>
+      )}
+      <Collapse in={!props.successAlert && !props.savedAlert}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-around",
+          }}
+        >
+          {auth.isLoggedIn && auth.token != "unverified" && (
             <Button
               variant="contained"
               size="medium"
@@ -60,31 +75,28 @@ const MainPage = (props) => {
             >
               Create Post
             </Button>
-          </div>
-        )}
-        {auth.token === "unverified" && (
-          <Alert severity="info" variant="filled">
-            Welcome to The Blog! Please ask Andrew to verify your account to
-            start posting and commenting (email verification under
-            construction).
-          </Alert>
-        )}
-      </Collapse>
-      {auth.userType === "admin" && (
-        <div className="center">
-          <Button
-            variant="contained"
-            size="medium"
-            onClick={() => {
-              navigate("/publish");
-            }}
-          >
-            Moderate Posts
-          </Button>
+          )}
+
+          {auth.userType === "admin" && (
+            <Button
+              variant="contained"
+              size="medium"
+              onClick={() => {
+                navigate("/publish");
+              }}
+            >
+              Moderate Posts
+            </Button>
+          )}
         </div>
-      )}
+      </Collapse>
       <Welcome text={welcomeString} />
-      {busy ? <LinearProgress /> : <PostsList posts={posts} />}
+      {busy ? (
+        <LinearProgress />
+      ) : (
+        <PostsList callback={fetchData} posts={posts} />
+      )}
+      <div className="footer">Copyright &copy; 2022 Andrew Gasparovich</div>
     </>
   );
 };

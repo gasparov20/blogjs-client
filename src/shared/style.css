@@ -13,6 +13,17 @@
   width: 700px;
 }
 
+.footer {
+  position: relative;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: gray;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 50px;
+}
+
 .center {
   display: flex;
   justify-content: center;

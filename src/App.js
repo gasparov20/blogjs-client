@@ -7,10 +7,11 @@ import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainPage from "./posts/pages/MainPage";
 import PendingPosts from "./posts/pages/PendingPosts";
-import Toolbar from "./shared/components/Toolbar";
+import ToolBar from "./shared/components/Toolbar";
 import Login from "./user/pages/Login";
 import Register from "./user/pages/Register";
 import UserProfile from "./user/pages/UserProfile";
+import EditProfile from "./user/pages/EditProfile";
 import AccessDenied from "./user/pages/AccessDenied";
 import CreatePost from "./posts/pages/CreatePost";
 import { AuthContext } from "./shared/context/auth-context";
@@ -28,6 +29,7 @@ const App = () => {
   const [userFirstName, setUserFirstName] = useState();
   const [tokenExpirationDate, setTokenExpirationDate] = useState();
   const [successAlert, setSuccessAlert] = useState(false);
+  const [savedAlert, setSavedAlert] = useState(false);
   const [userVerified, setUserVerified] = useState(false);
 
   const login = useCallback(
@@ -120,6 +122,13 @@ const App = () => {
     }, 5000);
   }, []);
 
+  const profileSaved = useCallback(() => {
+    setSavedAlert(true);
+    setTimeout(() => {
+      setSavedAlert(false);
+    }, 3000);
+  }, []);
+
   let routes;
   if (token !== "unverified" && userType === "admin") {
     routes = (
@@ -128,13 +137,18 @@ const App = () => {
           <Route exact path="/users/:id" element={<UserProfile />} />
           <Route
             path="/"
-            element={<MainPage successAlert={successAlert} />}
+            element={
+              <MainPage savedAlert={savedAlert} successAlert={successAlert} />
+            }
             exact
           />
           <Route path="/create" element={<CreatePost />} exact />
+          <Route path="/editprofile" element={<EditProfile />} exact />
           <Route
             path="/login"
-            element={<MainPage successAlert={successAlert} />}
+            element={
+              <MainPage savedAlert={savedAlert} successAlert={successAlert} />
+            }
             exact
           />
           <Route path="/publish" element={<PendingPosts />} exact />
@@ -148,13 +162,18 @@ const App = () => {
           <Route path="/users/:id" element={<UserProfile />} />
           <Route
             path="/"
-            element={<MainPage successAlert={successAlert} />}
+            element={
+              <MainPage savedAlert={savedAlert} successAlert={successAlert} />
+            }
             exact
           />
           <Route path="/create" element={<CreatePost />} exact />
+          <Route path="/editprofile" element={<EditProfile />} exact />
           <Route
             path="/login"
-            element={<MainPage successAlert={successAlert} />}
+            element={
+              <MainPage savedAlert={savedAlert} successAlert={successAlert} />
+            }
             exact
           />
           <Route path="/publish" element={<AccessDenied />} exact />
@@ -174,6 +193,7 @@ const App = () => {
           />
           <Route path="/" element={<MainPage />} exact />
           <Route path="/create" element={<AccessDenied />} exact />
+          <Route path="/editprofile" element={<AccessDenied />} exact />
           <Route path="/login" element={<Login />} exact />
           <Route path="/register" element={<Register />} exact />
           <Route path="/publish" element={<AccessDenied />} exact />
@@ -186,6 +206,7 @@ const App = () => {
     <AlertContext.Provider
       value={{
         setAlert: postSubmitted,
+        setSavedAlert: profileSaved,
       }}
     >
       <AuthContext.Provider
@@ -200,7 +221,7 @@ const App = () => {
         }}
       >
         <Router>
-          <Toolbar />
+          <ToolBar />
           <div className="main">{routes}</div>
         </Router>
       </AuthContext.Provider>

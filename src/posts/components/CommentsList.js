@@ -2,7 +2,7 @@ import Comment from "./Comment";
 
 const CommentsList = (props) => {
   return (
-    <div>
+    <div style={{ marginTop: "20px" }}>
       {props.comments.map((comment) => (
         <Comment
           refreshComments={props.refreshComments}

@@ -1,19 +1,25 @@
-import AppBar from "@mui/material/AppBar";
-import ToolBar from "@mui/material/Toolbar";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
-import React, { useContext, useEffect, useState } from "react";
+import {
+  Typography,
+  Box,
+  Button,
+  Toolbar,
+  AppBar,
+  Menu,
+  MenuItem,
+} from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
-const Toolbar = (props) => {
+const ToolBar = (props) => {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
   const loginTheme = createTheme({
     palette: {
@@ -39,9 +45,28 @@ const Toolbar = (props) => {
     navigate("/login");
   };
 
+  const handleLogout = () => {
+    setAnchorEl(null);
+    auth.logout();
+    navigate("/");
+  };
+
+  const handleEditProfile = () => {
+    setAnchorEl(null);
+    navigate("/editprofile");
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <AppBar>
-      <ToolBar>
+      <Toolbar>
         <Box display="flex" flexGrow={1}>
           <ThemeProvider theme={loginTheme}>
             <Typography
@@ -72,16 +97,37 @@ const Toolbar = (props) => {
         {auth.isLoggedIn && (
           <>
             <p style={{ marginRight: "30px" }}>Hello, {auth.userFirstName}</p>
-            <ThemeProvider theme={loginTheme}>
-              <Button color="primary" onClick={auth.logout}>
-                Logout
-              </Button>
-            </ThemeProvider>
+            <div>
+              <ThemeProvider theme={loginTheme}>
+                <Button
+                  color="primary"
+                  id="basic-button"
+                  aria-controls={open ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                  onClick={handleClick}
+                >
+                  My Account
+                </Button>
+              </ThemeProvider>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem onClick={handleEditProfile}>Edit Profile</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </div>
           </>
         )}
-      </ToolBar>
+      </Toolbar>
     </AppBar>
   );
 };
 
-export default Toolbar;
+export default ToolBar;
