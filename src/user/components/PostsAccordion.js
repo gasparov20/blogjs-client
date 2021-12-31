@@ -63,6 +63,7 @@ export default function PostsAccordion(props) {
           sx={{
             fontWeight: "600",
             alignSelf: "center",
+            marginLeft: "20px",
           }}
         >
           {props.post.title}

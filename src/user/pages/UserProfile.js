@@ -63,7 +63,12 @@ const UserProfile = () => {
         <LinearProgress />
       ) : (
         <>
-          <Paper style={{ padding: "30px" }}>
+          <Paper
+            style={{ padding: "30px" }}
+            onMouseEnter={() => {
+              document.getElementById("root").style.cursor = null;
+            }}
+          >
             <div style={{ display: "flex", flexDirection: "row" }}>
               <Avatar
                 sx={{ width: "150px", height: "150px" }}
@@ -78,11 +83,47 @@ const UserProfile = () => {
                 <p style={{ fontWeight: "600" }}>
                   {user.firstName} {user.lastName}
                 </p>
-                <p>Location: {user.location}</p>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  Location:
+                  <div
+                    style={{
+                      marginLeft: "5px",
+                      fontStyle: "italic",
+                    }}
+                  >
+                    {user.location === "" ? <>Nowhere-ville</> : user.location}
+                  </div>
+                </div>
                 <p>Joined: {convertMongoDate(user.joined)}</p>
               </div>
-              <div style={{ margin: "30px" }}>
-                <p>{user.bio}</p>
+              <div
+                style={{
+                  display: "flex",
+                  margin: "30px",
+                  flexDirection: "row",
+                  flexGrow: 1,
+                }}
+              >
+                {user.bio === "" ? (
+                  <p
+                    style={{
+                      fontStyle: "italic",
+                      color: "gray",
+                      alignSelf: "center",
+                      margin: "auto",
+                    }}
+                  >
+                    {user.firstName} has not added a bio.
+                  </p>
+                ) : (
+                  <p>{user.bio}</p>
+                )}
               </div>
             </div>
           </Paper>

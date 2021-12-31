@@ -214,8 +214,8 @@ const EditProfile = (props) => {
         }
       );
       setBusy(false);
-      //alert.setSavedAlert();
-      //navigate("/");
+      alert.setSavedAlert();
+      navigate("/");
     } catch (err) {}
   };
 

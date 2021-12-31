@@ -29,7 +29,12 @@ export default function DeleteDialog(props) {
 
   return (
     <>
-      <IconButton aria-label="delete" onClick={handleClickOpen}>
+      <IconButton
+        aria-label="delete"
+        onMouseEnter={props.onMouseEnter}
+        onMouseLeave={props.onMouseLeave}
+        onClick={handleClickOpen}
+      >
         <DeleteIcon />
       </IconButton>
       <Dialog

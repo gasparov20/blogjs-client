@@ -1,3 +1,26 @@
-.comment-row:hover {
-    background-color: #F4F4F4;
+.comment-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 20px;
+}
+
+.nameplate {
+    border-radius: 5px;
+    padding-left: 4px;
+    padding-right: 8px;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.nameplate:hover {
+    color: white;
+    background-color: #1976d2;
+    border-radius: 5px;
+    padding-left: 4px;
+    padding-right: 8px;
+    display: flex;
+    align-items: center;
+    height: 100%;
 }

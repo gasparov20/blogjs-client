@@ -1,4 +1,11 @@
-import { Paper, Avatar, Divider, TextField } from "@mui/material";
+import {
+  Paper,
+  Avatar,
+  Divider,
+  TextField,
+  Collapse,
+  Link,
+} from "@mui/material";
 import { useState, useContext, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { useHttpClient } from "../../shared/hooks/http-hook";
@@ -62,7 +69,7 @@ const UserPost = (props) => {
 
   return (
     <div
-      style={{ marginLeft: "20px", marginBottom: "20px", marginRight: "20px" }}
+      style={{ marginLeft: "20px", marginRight: "20px", marginBottom: "10px" }}
     >
       <div
         style={{
@@ -72,18 +79,20 @@ const UserPost = (props) => {
         {<Markup content={props.post.postBody} />}
       </div>
       <Divider style={{ margin: "15px" }} />
-      <p
+      <Link
+        color="inherit"
+        underline="hover"
+        onClick={commentsClickHandler}
         onMouseEnter={() => {
           document.getElementById("root").style.cursor = "pointer";
         }}
         onMouseLeave={() => {
           document.getElementById("root").style.cursor = null;
         }}
-        onClick={commentsClickHandler}
       >
         Comments ({comments.length})
-      </p>
-      {showComments && (
+      </Link>
+      <Collapse in={showComments}>
         <>
           {comments.length > 0 && (
             <CommentsList
@@ -92,39 +101,29 @@ const UserPost = (props) => {
               comments={comments}
             />
           )}
-          {!auth.isLoggedIn && comments.length === 0 && (
-            <p style={{ display: "inline-block", paddingLeft: "20px" }}>
-              No comments yet, log in to post one.
-            </p>
-          )}
-          {!auth.isLoggedIn && comments.length > 0 && (
-            <p style={{ display: "inline-block", paddingLeft: "20px" }}>
-              Log in to join the conversation.
-            </p>
-          )}
-          {auth.token === "unverified" && comments.length > 0 && (
-            <p style={{ display: "inline-block", paddingLeft: "20px" }}>
-              Verify your account to join the conversation.
-            </p>
-          )}
+          <p style={{ display: "inline-block" }}>
+            {!auth.isLoggedIn && comments.length === 0 && (
+              <>No comments yet, log in to post one.</>
+            )}
+            {!auth.isLoggedIn && comments.length > 0 && (
+              <>Log in to join the conversation.</>
+            )}
+            {auth.token === "unverified" && comments.length > 0 && (
+              <>Verify your account to join the conversation.</>
+            )}
+          </p>
           {auth.isLoggedIn && auth.token !== "unverified" && (
-            <div
-              style={{
-                marginTop: "20px",
-              }}
-            >
-              <TextField
-                onKeyDown={keyDownHandler}
-                value={newComment}
-                onChange={newCommentHandler}
-                fullWidth
-                placeholder="Type your comment and hit enter"
-                style={{ display: "inline-flex" }}
-              />
-            </div>
+            <TextField
+              onKeyDown={keyDownHandler}
+              value={newComment}
+              onChange={newCommentHandler}
+              fullWidth
+              placeholder="Type your comment and hit enter"
+              sx={{ marginTop: "20px" }}
+            />
           )}
         </>
-      )}
+      </Collapse>
     </div>
   );
 };

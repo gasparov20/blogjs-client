@@ -184,13 +184,7 @@ const App = () => {
     routes = (
       <Fragment>
         <Routes>
-          <Route
-            exact
-            path="/users/:id"
-            element={
-              token === "unverified" ? <UserProfile /> : <AccessDenied />
-            }
-          />
+          <Route exact path="/users/:id" element={<UserProfile />} />
           <Route path="/" element={<MainPage />} exact />
           <Route path="/create" element={<AccessDenied />} exact />
           <Route path="/editprofile" element={<AccessDenied />} exact />

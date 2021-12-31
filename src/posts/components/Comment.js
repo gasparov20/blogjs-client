@@ -1,4 +1,6 @@
+import { Avatar } from "@mui/material";
 import { useContext, useCallback, useState } from "react";
+import { useNavigate } from "react-router";
 import DeleteDialog from "./DeleteDialog";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
@@ -10,7 +12,8 @@ import "./Comment.css";
 const Comment = (props) => {
   const auth = useContext(AuthContext);
   const { sendRequest } = useHttpClient();
-  const [rowHighlight, setRowHighlight] = useState();
+  const [rowColor, setRowColor] = useState({ backgroundColor: "white" });
+  const navigate = useNavigate();
 
   // sends request to server to delete a comment
   const deleteHandler = useCallback(async () => {
@@ -26,31 +29,54 @@ const Comment = (props) => {
   }, [sendRequest, auth.token, props]);
 
   return (
-    <div
-      className="comment-row"
-      style={{
-        display: "flex",
-        flexDirection: "row",
-      }}
-      key={props.id}
-    >
-      <p
-        style={{
-          paddingLeft: "10px",
-          flexGrow: "1",
-        }}
-      >
+    <div className="comment-row" style={rowColor} key={props.id}>
+      <div style={{}}>
         {!!props.creatorID && (
-          <strong>
-            {`${props.creatorID.firstName} ${props.creatorID.lastName}`}:{" "}
-          </strong>
+          <div
+            style={{ display: "flex", alignItems: "center", height: "40px" }}
+          >
+            <div
+              className="nameplate"
+              onMouseEnter={() => {
+                document.getElementById("root").style.cursor = "pointer";
+              }}
+              onMouseLeave={() => {
+                document.getElementById("root").style.cursor = null;
+              }}
+              onClick={() => {
+                navigate(`/users/${props.creatorID._id || props.creatorID.id}`);
+              }}
+            >
+              <Avatar
+                sx={{ width: "30px", height: "30px", marginRight: "2px" }}
+                src={
+                  props.creatorID.image === ""
+                    ? ""
+                    : `${process.env.REACT_APP_STATIC_URL}${props.creatorID.image}`
+                }
+              />
+              <div style={{ fontWeight: "500" }}>
+                {`${props.creatorID.firstName} ${props.creatorID.lastName}`}
+              </div>
+            </div>
+            <div style={{ marginLeft: "8px" }}>{props.comment}</div>
+          </div>
         )}
-        {props.comment}
-      </p>
+      </div>
+      <div style={{ flexGrow: 1 }}></div>
       {(auth.userType === "admin" ||
         auth.userId === props.creatorID._id ||
         auth.userId === props.creatorID._id) && (
-        <DeleteDialog type="comment" callback={deleteHandler} />
+        <DeleteDialog
+          type="comment"
+          onMouseEnter={() => {
+            setRowColor({ backgroundColor: "#F4F4F4" });
+          }}
+          onMouseLeave={() => {
+            setRowColor({ backgroundColor: "white" });
+          }}
+          callback={deleteHandler}
+        />
       )}
     </div>
   );

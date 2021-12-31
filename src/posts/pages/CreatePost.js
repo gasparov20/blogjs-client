@@ -22,7 +22,7 @@ const CreatePost = (props) => {
   };
 
   const postChangedHandler = (event) => {
-    setConvertedText(event);
+    setConvertedText(event.target.value);
   };
 
   const fakeTitle = "Test Post";
@@ -68,14 +68,21 @@ const CreatePost = (props) => {
             onChange={titleChangedHandler}
           />
         </div>
-        <div style={{ backgroundColor: "white" }}>
-          {/* <ReactQuill
-            theme="snow"
-            placeholder={"Start creating your masterpiece..."}
-            value={convertedText}
+        <div
+          style={{
+            display: "flex",
+            width: "auto",
+            flexDirection: "column",
+            backgroundColor: "white",
+          }}
+        >
+          <TextField
+            multiline
+            rows={5}
+            placeholder="Start creating your masterpiece... And HTML is enabled!"
             onChange={postChangedHandler}
-          /> */}
-          <p>ReactQuill should be here. RIP.</p>
+            sx={{ width: "auto" }}
+          />
         </div>
         <div
           style={{ display: "flex", justifyContent: "center", margin: "30px" }}

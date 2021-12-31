@@ -1,4 +1,11 @@
-import { Paper, Avatar, Divider, TextField } from "@mui/material";
+import {
+  Paper,
+  Avatar,
+  Divider,
+  TextField,
+  Collapse,
+  Link,
+} from "@mui/material";
 import { useState, useContext, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { useHttpClient } from "../../shared/hooks/http-hook";
@@ -120,18 +127,20 @@ const Post = (props) => {
           {props.postBody}
         </div>
         <Divider style={{ margin: "15px" }} />
-        <div style={{ display: "flex" }}>
-          <p
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Link
+            color="inherit"
+            underline="hover"
+            onClick={commentsClickHandler}
             onMouseEnter={() => {
               document.getElementById("root").style.cursor = "pointer";
             }}
             onMouseLeave={() => {
               document.getElementById("root").style.cursor = null;
             }}
-            onClick={commentsClickHandler}
           >
             Comments ({comments.length})
-          </p>
+          </Link>
           <div style={{ flexGrow: 1, alignItems: "right" }}></div>
           <div
             className="user"
@@ -165,48 +174,46 @@ const Post = (props) => {
             </p>
           </div>
         </div>
-        {showComments && (
-          <>
-            {comments.length > 0 && (
-              <CommentsList
-                refreshComments={refreshComments}
-                postID={props.id}
-                comments={comments}
+        <Collapse in={showComments}>
+          {comments.length > 0 && (
+            <CommentsList
+              refreshComments={refreshComments}
+              postID={props.id}
+              comments={comments}
+            />
+          )}
+          {!auth.isLoggedIn && comments.length === 0 && (
+            <p style={{ display: "inline-block", paddingLeft: "20px" }}>
+              No comments yet, log in to post one.
+            </p>
+          )}
+          {!auth.isLoggedIn && comments.length > 0 && (
+            <p style={{ display: "inline-block", paddingLeft: "20px" }}>
+              Log in to join the conversation.
+            </p>
+          )}
+          {auth.token === "unverified" && comments.length > 0 && (
+            <p style={{ display: "inline-block", paddingLeft: "20px" }}>
+              Verify your account to join the conversation.
+            </p>
+          )}
+          {auth.isLoggedIn && auth.token !== "unverified" && (
+            <div
+              style={{
+                marginTop: "20px",
+              }}
+            >
+              <TextField
+                onKeyDown={keyDownHandler}
+                value={newComment}
+                onChange={newCommentHandler}
+                fullWidth
+                placeholder="Type your comment and hit enter"
+                style={{ display: "inline-flex" }}
               />
-            )}
-            {!auth.isLoggedIn && comments.length === 0 && (
-              <p style={{ display: "inline-block", paddingLeft: "20px" }}>
-                No comments yet, log in to post one.
-              </p>
-            )}
-            {!auth.isLoggedIn && comments.length > 0 && (
-              <p style={{ display: "inline-block", paddingLeft: "20px" }}>
-                Log in to join the conversation.
-              </p>
-            )}
-            {auth.token === "unverified" && comments.length > 0 && (
-              <p style={{ display: "inline-block", paddingLeft: "20px" }}>
-                Verify your account to join the conversation.
-              </p>
-            )}
-            {auth.isLoggedIn && auth.token !== "unverified" && (
-              <div
-                style={{
-                  marginTop: "20px",
-                }}
-              >
-                <TextField
-                  onKeyDown={keyDownHandler}
-                  value={newComment}
-                  onChange={newCommentHandler}
-                  fullWidth
-                  placeholder="Type your comment and hit enter"
-                  style={{ display: "inline-flex" }}
-                />
-              </div>
-            )}
-          </>
-        )}
+            </div>
+          )}
+        </Collapse>
       </Paper>
     </div>
   );
