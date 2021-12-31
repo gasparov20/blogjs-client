@@ -93,24 +93,10 @@ const Post = (props) => {
         }}
         elevation={2}
       >
-        <div
-          className="title"
-          style={{ display: "flex", alignItems: "center" }}
-        >
-          <p
-            style={{
-              fontSize: "24px",
-              fontWeight: "500",
-
-              marginRight: "50px",
-            }}
-          >
-            {props.title}
-          </p>
+        <div className="title">
+          <p className="titleP">{props.title}</p>
           <div style={{ flexGrow: "1" }}></div>
-          <p style={{ fontSize: "18px", marginRight: "20px" }}>
-            {convertMongoDate(props.date)}
-          </p>
+          <p className="date">{convertMongoDate(props.date)}</p>
           {((auth.userType && auth.userType === "admin") ||
             (auth.userId &&
               (auth.userId === props.creator.id ||
@@ -118,17 +104,11 @@ const Post = (props) => {
             <DeleteDialog type="post" callback={deleteHandler} />
           )}
         </div>
-        <div
-          style={{
-            fontSize: "18px",
-            paddingBottom: "10px",
-          }}
-        >
-          {props.postBody}
-        </div>
+        <div className="postBody">{props.postBody}</div>
         <Divider style={{ margin: "15px" }} />
         <div style={{ display: "flex", alignItems: "center" }}>
           <Link
+            className="commentsLink"
             color="inherit"
             underline="hover"
             onClick={commentsClickHandler}
@@ -165,15 +145,7 @@ const Post = (props) => {
                 }
               />
             </div>
-            <p
-              style={{
-                fontSize: "14px",
-                fontWeight: "600",
-                paddingLeft: "10px",
-              }}
-            >
-              {props.author}
-            </p>
+            <p className="author">{props.author}</p>
           </div>
         </div>
         <Collapse in={showComments}>
@@ -185,17 +157,17 @@ const Post = (props) => {
             />
           )}
           {!auth.isLoggedIn && comments.length === 0 && (
-            <p style={{ display: "inline-block" }}>
+            <p className="commentMsg" style={{ display: "inline-block" }}>
               No comments yet, log in to post one.
             </p>
           )}
           {!auth.isLoggedIn && comments.length > 0 && (
-            <p style={{ display: "inline-block" }}>
+            <p className="commentMsg" style={{ display: "inline-block" }}>
               Log in to join the conversation.
             </p>
           )}
           {auth.token === "unverified" && comments.length > 0 && (
-            <p style={{ display: "inline-block" }}>
+            <p className="commentMsg" style={{ display: "inline-block" }}>
               Verify your account to join the conversation.
             </p>
           )}

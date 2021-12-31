@@ -24,3 +24,36 @@
     align-items: center;
     height: 100%;
 }
+
+@media (max-width:1050px) { 
+    .comment-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 20px;
+    }
+
+    .commentText {
+        font-size: 12px;
+    }
+    
+    .nameplate {
+        border-radius: 5px;
+        padding-left: 2px;
+        padding-right: 4px;
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+    
+    .nameplate:hover {
+        color: white;
+        background-color: #1976d2;
+        border-radius: 5px;
+        padding-left: 2px;
+        padding-right: 4px;
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+}

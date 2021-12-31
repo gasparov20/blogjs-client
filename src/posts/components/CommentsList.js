@@ -1,10 +1,11 @@
 import Comment from "./Comment";
 import React from "react";
 import ReactDOM from "react-dom";
+import "./CommentsList.css";
 
 const CommentsList = (props) => {
   return (
-    <div style={{ marginTop: "20px" }}>
+    <div className="list">
       {props.comments.map((comment) => (
         <Comment
           refreshComments={props.refreshComments}

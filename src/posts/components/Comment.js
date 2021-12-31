@@ -6,7 +6,6 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 import React from "react";
 import ReactDOM from "react-dom";
-
 import "./Comment.css";
 
 const Comment = (props) => {
@@ -57,11 +56,13 @@ const Comment = (props) => {
                     : props.creatorID.image
                 }
               />
-              <div style={{ fontWeight: "500" }}>
+              <div className="commentText" style={{ fontWeight: "500" }}>
                 {`${props.creatorID.firstName} ${props.creatorID.lastName}`}
               </div>
             </div>
-            <div style={{ marginLeft: "8px" }}>{props.comment}</div>
+            <div className="commentText" style={{ marginLeft: "8px" }}>
+              {props.comment}
+            </div>
           </div>
         )}
       </div>

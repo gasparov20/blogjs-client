@@ -3,3 +3,12 @@
     display: inherit;
     margin: auto;
 }
+
+@media (max-width:1050px) { 
+
+    .center-div {
+        width: 95%;
+        display: inherit;
+        margin: auto;
+    }
+}
