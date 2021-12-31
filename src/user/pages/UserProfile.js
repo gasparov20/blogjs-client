@@ -76,7 +76,9 @@ const UserProfile = () => {
                 src={
                   user.image === ""
                     ? ""
-                    : `${process.env.REACT_APP_STATIC_URL}${user.image}`
+                    : user.image.includes("/uploads/images")
+                    ? `${process.env.REACT_APP_STATIC_URL}${user.image}`
+                    : user.image
                 }
               />
               <div style={{ margin: "30px" }}>

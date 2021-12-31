@@ -64,7 +64,7 @@ const ToolBar = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log(auth);
+
   return (
     <AppBar>
       <Toolbar>

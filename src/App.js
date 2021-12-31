@@ -11,6 +11,7 @@ import ToolBar from "./shared/components/Toolbar";
 import Login from "./user/pages/Login";
 import Register from "./user/pages/Register";
 import UserProfile from "./user/pages/UserProfile";
+import UserVerified from "./user/pages/UserVerified";
 import EditProfile from "./user/pages/EditProfile";
 import AccessDenied from "./user/pages/AccessDenied";
 import CreatePost from "./posts/pages/CreatePost";
@@ -31,6 +32,7 @@ const App = () => {
   const [successAlert, setSuccessAlert] = useState(false);
   const [savedAlert, setSavedAlert] = useState(false);
   const [userVerified, setUserVerified] = useState(false);
+  const [verifiedAlert, setVerifiedAlert] = useState(false);
 
   const login = useCallback(
     (userId, token, userFirstName, userType, expirationDate) => {
@@ -129,12 +131,20 @@ const App = () => {
     }, 3000);
   }, []);
 
+  const profileVerified = useCallback(() => {
+    setVerifiedAlert(true);
+    setTimeout(() => {
+      setVerifiedAlert(false);
+    }, 3000);
+  }, []);
+
   let routes;
   if (token !== "unverified" && userType === "admin") {
     routes = (
       <Fragment>
         <Routes>
           <Route exact path="/users/:id" element={<UserProfile />} />
+          <Route path="/test" element={<UserVerified />} exact />
           <Route
             path="/"
             element={
@@ -147,7 +157,11 @@ const App = () => {
           <Route
             path="/login"
             element={
-              <MainPage savedAlert={savedAlert} successAlert={successAlert} />
+              <MainPage
+                savedAlert={savedAlert}
+                successAlert={successAlert}
+                verifiedAlert={verifiedAlert}
+              />
             }
             exact
           />
@@ -159,6 +173,7 @@ const App = () => {
     routes = (
       <Fragment>
         <Routes>
+          <Route exact path="/users/verify/:code" element={<UserVerified />} />
           <Route path="/users/:id" element={<UserProfile />} />
           <Route
             path="/"
@@ -184,6 +199,7 @@ const App = () => {
     routes = (
       <Fragment>
         <Routes>
+          <Route exact path="/users/verify/:code" element={<UserVerified />} />
           <Route exact path="/users/:id" element={<UserProfile />} />
           <Route path="/" element={<MainPage />} exact />
           <Route path="/create" element={<AccessDenied />} exact />

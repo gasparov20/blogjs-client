@@ -61,7 +61,7 @@ const Register = () => {
           "Content-Type": "application/json",
         }
       );
-      console.log(responseData2);
+
       if (responseData2.message) {
         if (responseData2.message === "email address already in use") {
           setEmailInUse(true);
@@ -89,8 +89,6 @@ const Register = () => {
     } catch (err) {}
     navigate("/");
   };
-
-  const login = async () => {};
 
   return (
     <ThemeProvider theme={theme}>

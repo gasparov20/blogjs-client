@@ -52,7 +52,9 @@ const Comment = (props) => {
                 src={
                   props.creatorID.image === ""
                     ? ""
-                    : `${process.env.REACT_APP_STATIC_URL}${props.creatorID.image}`
+                    : props.creatorID.image.includes("/uploads/images")
+                    ? `${process.env.REACT_APP_STATIC_URL}${props.creatorID.image}`
+                    : props.creatorID.image
                 }
               />
               <div style={{ fontWeight: "500" }}>

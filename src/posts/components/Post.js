@@ -159,7 +159,9 @@ const Post = (props) => {
                 src={
                   props.creator.image === ""
                     ? ""
-                    : `${process.env.REACT_APP_STATIC_URL}${props.creator.image}`
+                    : props.creator.image.includes("/uploads/images")
+                    ? `${process.env.REACT_APP_STATIC_URL}${props.creator.image}`
+                    : props.creator.image
                 }
               />
             </div>
@@ -183,17 +185,17 @@ const Post = (props) => {
             />
           )}
           {!auth.isLoggedIn && comments.length === 0 && (
-            <p style={{ display: "inline-block", paddingLeft: "20px" }}>
+            <p style={{ display: "inline-block" }}>
               No comments yet, log in to post one.
             </p>
           )}
           {!auth.isLoggedIn && comments.length > 0 && (
-            <p style={{ display: "inline-block", paddingLeft: "20px" }}>
+            <p style={{ display: "inline-block" }}>
               Log in to join the conversation.
             </p>
           )}
           {auth.token === "unverified" && comments.length > 0 && (
-            <p style={{ display: "inline-block", paddingLeft: "20px" }}>
+            <p style={{ display: "inline-block" }}>
               Verify your account to join the conversation.
             </p>
           )}

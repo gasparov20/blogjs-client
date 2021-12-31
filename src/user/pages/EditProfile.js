@@ -15,6 +15,11 @@ import {
   Menu,
   MenuItem,
   TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -97,6 +102,8 @@ const EditProfile = (props) => {
   const [locationError, setLocationError] = useState(false);
   const [bio, setBio] = useState("");
   const [bioChanged, setBioChanged] = useState(false);
+  const [url, setUrl] = useState("");
+  const [openUrl, setOpenUrl] = React.useState(false);
 
   const [formState, inputHandler] = useImageUpload(
     {
@@ -125,7 +132,11 @@ const EditProfile = (props) => {
       setPreviewUrl("");
       setRemoveDisabled(true);
     } else {
-      setPreviewUrl(`${process.env.REACT_APP_STATIC_URL}${responseData.image}`);
+      setPreviewUrl(
+        responseData.image.includes("/uploads/images")
+          ? `${process.env.REACT_APP_STATIC_URL}${responseData.image}`
+          : responseData.image
+      );
       setRemoveDisabled(false);
     }
     setUser(responseData);
@@ -155,6 +166,7 @@ const EditProfile = (props) => {
   const pickedHandler = (event) => {
     let pickedFile;
     let imageIsValid = isValid;
+    setUrl("");
     if (event.target.files && event.target.files.length !== 0) {
       setRemoveImage(false);
       pickedFile = event.target.files[0];
@@ -178,7 +190,7 @@ const EditProfile = (props) => {
       lnError = false,
       locError = false;
 
-    if (!removeImage && changeImage && (!file || !isValid)) {
+    if (!removeImage && changeImage && ((!file && url === "") || !isValid)) {
       return;
     }
 
@@ -202,7 +214,13 @@ const EditProfile = (props) => {
       if (bioChanged === true) {
         formData.append("bio", bio);
       }
-      formData.append("image", formState.inputs.image.value);
+      if (changeImage === true) {
+        if (url === "") {
+          formData.append("image", formState.inputs.image.value);
+        } else {
+          formData.append("image", url);
+        }
+      }
       formData.append("removeImage", removeImage);
 
       responseData = await sendRequest(
@@ -236,7 +254,7 @@ const EditProfile = (props) => {
 
   const handleMirror = () => {
     setAnchorEl(null);
-    console.log("TO DO");
+    setOpenUrl(true);
   };
 
   const handleRemove = () => {
@@ -244,6 +262,7 @@ const EditProfile = (props) => {
     setRemoveDisabled(true);
     setRemoveImage(true);
     setPreviewUrl("");
+    setUrl("");
   };
 
   const handlefNameChange = (event) => {
@@ -279,6 +298,35 @@ const EditProfile = (props) => {
   const handleBioChange = (event) => {
     setBioChanged(true);
     setBio(event.target.value);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenUrl(false);
+  };
+
+  const handleOk = () => {
+    setOpenUrl(false);
+    setChangeImage(true);
+    let imageIsValid,
+      urlValid = true;
+
+    if (urlValid) {
+      setRemoveImage(false);
+      setPreviewUrl(url);
+      setIsValid(true);
+      setChangeImage(true);
+      setRemoveDisabled(false);
+      imageIsValid = true;
+    } else {
+      setIsValid(false);
+      setChangeImage(false);
+      imageIsValid = false;
+    }
+    setRemoveImage(false);
+  };
+
+  const handleUrlChange = (event) => {
+    setUrl(event.target.value);
   };
 
   return (
@@ -328,13 +376,30 @@ const EditProfile = (props) => {
                   }}
                 >
                   <MenuItem onClick={handleUpload}>Upload</MenuItem>
-                  <MenuItem disabled={true} onClick={handleMirror}>
-                    From URL
-                  </MenuItem>
+                  <MenuItem onClick={handleMirror}>From URL</MenuItem>
                   <MenuItem disabled={removeDisabled} onClick={handleRemove}>
                     Remove
                   </MenuItem>
                 </Menu>
+                <Dialog open={openUrl} onClose={handleCloseDialog}>
+                  <DialogContent>
+                    <DialogContentText>
+                      Please paste the URL of your profile picture.
+                    </DialogContentText>
+                    <TextField
+                      margin="dense"
+                      label="Image URL"
+                      type="url"
+                      fullWidth
+                      variant="standard"
+                      onChange={handleUrlChange}
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleOk}>Ok</Button>
+                    <Button onClick={handleCloseDialog}>Cancel</Button>
+                  </DialogActions>
+                </Dialog>
                 <br />
               </div>
               <div

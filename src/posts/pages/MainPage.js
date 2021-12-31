@@ -54,8 +54,8 @@ const MainPage = (props) => {
       </Collapse>
       {auth.token === "unverified" && (
         <Alert severity="info" variant="filled">
-          Welcome to The Blog! Please ask Andrew to verify your account to start
-          posting and commenting (email verification under construction).
+          Welcome to The Blog! Please click the link sent to your email address
+          to verify your account.
         </Alert>
       )}
       <Collapse in={!props.successAlert && !props.savedAlert}>
