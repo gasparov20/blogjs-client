@@ -6,7 +6,6 @@ import Welcome from "../components/Welcome";
 import PostsList from "../components/PostsList";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
-import ReactDOM from "react-dom";
 import "../../shared/style.css";
 
 const MainPage = (props) => {
@@ -27,7 +26,7 @@ const MainPage = (props) => {
         "GET"
       );
     } catch (err) {}
-    const reversedPosts = responseData.reverse();
+    const reversedPosts = responseData;
     setPosts(reversedPosts);
     setBusy(false);
   }, [sendRequest]);
@@ -78,7 +77,8 @@ const MainPage = (props) => {
             </Button>
           )}
 
-          {auth.userType === "admin" && (
+          {auth.isLoggedIn && auth.token &&
+          auth.userType === "admin" && (
             <Button
               variant="contained"
               size="medium"
@@ -97,7 +97,7 @@ const MainPage = (props) => {
       ) : (
         <PostsList callback={fetchData} posts={posts} />
       )}
-      <div className="footer">Copyright &copy; 2022 Andrew Gasparovich</div>
+      <div className="footer">Copyright &copy; 2024 Andrew Gasparovich</div>
       {busy ? (
         <></>
       ) : (

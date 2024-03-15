@@ -6,7 +6,7 @@ import "./CommentsList.css";
 const CommentsList = (props) => {
   return (
     <div className="list">
-      {props.comments.map((comment) => (
+      {props.comments?.map((comment) => (
         <Comment
           refreshComments={props.refreshComments}
           postID={props.postID}

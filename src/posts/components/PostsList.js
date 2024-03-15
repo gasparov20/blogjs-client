@@ -6,7 +6,7 @@ import ReactDOM from "react-dom";
 const PostsList = (props) => {
   return (
     <>
-      {props.posts.map((post) => (
+      {props.posts?.map((post) => (
         <Post
           key={post._id || post.id}
           id={post._id || post.id}

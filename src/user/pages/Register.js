@@ -62,12 +62,16 @@ const Register = () => {
         }
       );
 
+      console.log("registration post sent successfully");
+
       if (responseData2.message) {
         if (responseData2.message === "email address already in use") {
           setEmailInUse(true);
           return;
         }
       }
+
+      console.log("trying to login");
 
       const responseData = await sendRequest(
         `${process.env.REACT_APP_SERVER_URL}/users/login`,
@@ -86,7 +90,9 @@ const Register = () => {
         responseData.userName,
         responseData.userType
       );
-    } catch (err) {}
+    } catch (err) {
+      console.log("error during registration or auto-login: " + err);
+    }
     navigate("/");
   };
 

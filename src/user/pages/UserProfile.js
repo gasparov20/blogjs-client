@@ -13,7 +13,7 @@ const UserPostsList = (props) => {
   let posts = [...props.posts].reverse();
   return (
     <>
-      {posts.map((post) => (
+      {posts?.map((post) => (
         <PostsAccordion key={post.id} post={post} callback={props.callback} />
       ))}
     </>

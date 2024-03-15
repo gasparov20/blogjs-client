@@ -96,11 +96,12 @@ const Post = (props) => {
         <div className="title">
           <p className="titleP">{props.title}</p>
           <div style={{ flexGrow: "1" }}></div>
-          <p className="date">{convertMongoDate(props.date)}</p>
-          {((auth.userType && auth.userType === "admin") ||
+          <p className="date">{convertMongoDate(props.date)}</p>          
+          {((auth.isLoggedIn && auth.token) &&
+            ((auth.userType && auth.userType === "admin") ||
             (auth.userId &&
               (auth.userId === props.creator.id ||
-                auth.userId === props.creator._id))) && (
+                auth.userId === props.creator._id)))) && (
             <DeleteDialog type="post" callback={deleteHandler} />
           )}
         </div>
